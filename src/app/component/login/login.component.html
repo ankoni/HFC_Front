@@ -1,0 +1,21 @@
+<div flex layout="column" layout-align="center center" class="login">
+  <form [formGroup]="loginForm" class="login-form" layout="column" layout-align="center center">
+    <div class="login-form-title">Вход в систему</div>
+    <div *ngIf="errorMessage" class="mat-error">
+      {{errorMessage}}
+    </div>
+    <mat-form-field class="login-form-input">
+      <mat-label>Логин</mat-label>
+      <input matInput type="text" [formControl]="login" (ngModelChange)="changeValues()">
+    </mat-form-field>
+    <mat-form-field class="login-form-input">
+      <mat-label>Пароль</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" [formControl]="password" (ngModelChange)="changeValues()">
+      <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+    <button mat-button class="mat-button mat-primary" (click)="submitForm(loginForm)">Войти</button>
+  </form>
+
+  <button mat-button (click)="openRegistrationForm()" class="mat-accent push-top-sm">Заявка на регистрацию</button>
+</div>
+

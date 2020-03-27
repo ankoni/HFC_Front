@@ -1,0 +1,33 @@
+<div *ngIf="registrationForm" >
+
+  <div class="login-form-title mat-title">Заявка на регистрацию</div>
+  <form [formGroup]="registrationForm" layout="column" layout-align="center">
+    <div *ngIf="errorMessage" class="mat-error text-center">
+      {{errorMessage}}
+    </div>
+    <mat-form-field class="login-form-input">
+      <mat-label>Логин</mat-label>
+      <input matInput
+             type="text"
+             [formControl]="loginReg"
+             (ngModelChange)="errorMessage = ''"
+      >
+    </mat-form-field>
+    <mat-form-field class="login-form-input">
+      <mat-label>Пароль</mat-label>
+      <input matInput
+             [type]="hidePassword ? 'password' : 'text'"
+             [formControl]="passwordReg"
+             (ngModelChange)="errorMessage = ''"
+      >
+      <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </mat-form-field>
+    <mat-form-field class="login-form-input">
+      <mat-label>Подтверждение пароля</mat-label>
+      <input matInput type="password" [formControl]="confirmPassword">
+    </mat-form-field>
+    <button mat-button class="mat-primary" (click)="accept()">
+      Отправить заявку
+    </button>
+  </form>
+</div>

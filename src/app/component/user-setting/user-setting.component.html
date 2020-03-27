@@ -1,0 +1,48 @@
+<div class="user-setting" flex="auto" layout="column">
+  <div class="mat-title">Настройки аккаунта</div>
+  <mat-drawer-container class="user-setting-sidenav" flex>
+    <mat-drawer mode="side" opened class="user-setting-menu">
+      <mat-nav-list class="pad-top-none">
+        <mat-list-item *ngFor="let item of menu" (click)="openData(item.id)">
+          <span matLine>{{item.name}}</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-drawer>
+    <mat-drawer-content>
+      <ng-container *ngIf="openedContent===UserSettingContent.User">
+        <div class="user-setting-user">
+          <form [formGroup]="userDataForm" layout="column" layout-align="center stretch">
+            <div class="mat-title login-form-title pad-bottom-md">Данные о пользователе</div>
+            <mat-form-field class="user-setting-user-input">
+              <mat-label>Логин</mat-label>
+              <input matInput type="text" [formControl]="userDataForm.get('username')" [value]="name">
+            </mat-form-field>
+            <mat-form-field class="user-setting-user-input">
+              <mat-label>Текущий пароль</mat-label>
+              <input matInput type="password" [formControl]="userDataForm.get('currentPassword')" >
+            </mat-form-field>
+            <mat-form-field class="user-setting-user-input">
+              <mat-label>Новый пароль</mat-label>
+              <input matInput type="password" [formControl]="userDataForm.get('newPassword')" >
+            </mat-form-field>
+            <mat-form-field class="user-setting-user-input">
+              <mat-label>Подтверждение пароля</mat-label>
+              <input matInput type="password" [formControl]="userDataForm.get('confirm')">
+            </mat-form-field>
+            <div class="user-setting-buttons" layout="row" layout-align="center">
+              <button mat-button class="mat-button mat-primary" [disabled]="userDataForm.pristine" (click)="save()">Сохранить</button>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="openedContent===UserSettingContent.UserAccount">
+        <app-user-account-setting
+          [userId]="userId"
+        ></app-user-account-setting>
+      </ng-container>
+      <ng-container *ngIf="openedContent===UserSettingContent.UserCategory">
+        <app-user-category-setting></app-user-category-setting>
+      </ng-container>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

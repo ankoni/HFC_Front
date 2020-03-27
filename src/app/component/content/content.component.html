@@ -1,0 +1,18 @@
+<div class="height-full" layout="column">
+  <div flex="none">
+    <app-menu [login]="userName"
+    ></app-menu>
+  </div>
+  <mat-drawer-container flex="grow">
+    <mat-drawer mode="side" opened class="user-setting-menu">
+      <mat-nav-list class="pad-top-none">
+        <mat-list-item *ngFor="let item of menu">
+          <span matLine>{{item.name}}</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-drawer>
+    <mat-drawer-content>
+      123
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,25 @@
+<div class="main-menu" layout="row" layout-align="end center">
+  <span class="mat-body">
+    Общий счет: {{account}}
+  </span>
+  <div class="main-menu-login pad-left-md" layout="row" layout-align="space-around center">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <span class="material-icons">
+        account_box
+      </span>
+    </button>
+    <div class="pad-left-sm">{{login}}</div>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openUserSetting()">
+        Личный кабинет
+      </button>
+      <button mat-menu-item>Админ панель</button>
+    </mat-menu>
+
+    <div class="pad-left-md pad-right-sm">
+      <button mat-icon-button (click)="logout()">
+        <mat-icon matTooltip="Выход">exit_to_app</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

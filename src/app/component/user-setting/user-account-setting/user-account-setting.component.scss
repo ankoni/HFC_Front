@@ -1,0 +1,18 @@
+.mat-column {
+  &-name {
+    max-width: 100px;
+    min-width: 100px;
+  }
+  &-balance {
+    max-width: 70px;
+    min-width: 70px;
+  }
+  &-update, &-create, &-delete {
+    max-width: 80px;
+    min-width: 80px;
+  }
+  &-delete {
+    max-width: 40px;
+    min-width: 40px;
+  }
+}

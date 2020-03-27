@@ -1,0 +1,22 @@
+.login {
+  background-color: #c8d5eb;
+  height: 100%;
+  &-form {
+    width: 400px;
+    height: 300px;
+    background: #F8F2E5;
+    box-shadow: 1px 4px 2px rgba(0, 0, 0, 0.25);
+    padding: 40px;
+    &-title {
+      font-weight: 700;
+      font-size: 22px;
+      color: #424242;
+    }
+    &-input {
+      width: 100%;
+    }
+    .mat-button {
+      font-size: 16px;
+    }
+  }
+}
