@@ -4,15 +4,17 @@
     ></app-menu>
   </div>
   <mat-drawer-container flex="grow">
-    <mat-drawer mode="side" opened class="user-setting-menu">
+    <mat-drawer mode="side" opened>
       <mat-nav-list class="pad-top-none">
         <mat-list-item *ngFor="let item of menu">
-          <span matLine>{{item.name}}</span>
+          <span matLine>
+            <a routerLink="finance">{{item.name}}</a>
+          </span>
         </mat-list-item>
       </mat-nav-list>
     </mat-drawer>
     <mat-drawer-content>
-      123
+      <router-outlet></router-outlet>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

@@ -12,8 +12,8 @@ export class AccountService {
     private http: HttpClient
   ) { }
 
-  getAccountsByUserId(id: string): Observable<UserAccountTableData[]> {
-    return this.http.get<UserAccountTableData[]>(`rest/account/user/${id}`);
+  getAccountsByUserId(): Observable<UserAccountTableData[]> {
+    return this.http.get<UserAccountTableData[]>(`rest/account/user/`);
   }
 
   updateUsersAccounts(id: string, data: UserAccountTableData[]): Observable<UserAccountTableData[]> {

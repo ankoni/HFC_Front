@@ -8,24 +8,8 @@ import {Router} from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'СУРД';
-  forwardToLogin: boolean;
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor() { }
 
   ngOnInit() {
-    this.authService.checkAuth().subscribe(isLogged => {
-        if (!isLogged) {
-          this.forwardToLogin = true;
-          this.router.navigate(['login']);
-        } else {
-          this.router.navigate(['main']);
-        }
-      },
-      error => {
-        console.log(error);
-      });
   }
 }

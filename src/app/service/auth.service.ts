@@ -7,7 +7,7 @@ import {LoginComponent, AuthData} from '../component/login/login.component';
   providedIn: 'root'
 })
 export class AuthService {
-
+  isAuth = false;
   constructor(
     private http: HttpClient
   ) {

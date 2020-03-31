@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
 
 export class UserAccountTableData {
+  id: string;
   name: string;
   balance: number;
   update: string;
@@ -37,7 +38,7 @@ export class UserAccountSettingComponent implements OnInit {
   isChanged: boolean;
 
   ngOnInit() {
-    this.accountService.getAccountsByUserId(this.userId).subscribe((data: UserAccountTableData[]) => {
+    this.accountService.getAccountsByUserId().subscribe((data: UserAccountTableData[]) => {
       this.userAccountTable  = data;
     }, error => {
       console.log(error.message);
@@ -46,6 +47,7 @@ export class UserAccountSettingComponent implements OnInit {
 
   addNewRow() {
     this.userAccountTable.push({
+      id: '',
       name: '',
       balance: null,
       update: '',

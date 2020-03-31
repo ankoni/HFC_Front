@@ -9,7 +9,6 @@ import {Router} from '@angular/router';
 })
 export class ContentComponent implements OnInit {
 
-  authIsRequired: boolean;
   userName: string;
   menu = [
     {name: 'Таблица финансов'}
@@ -22,11 +21,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit() {
     this.authService.checkAuth().subscribe(isLogged => {
-        if (!isLogged) {
-          this.router.navigate(['login']);
-        } else {
-          this.userName = isLogged.name;
-        }
+        this.userName = isLogged.name;
       },
       error => {
         console.log(error);

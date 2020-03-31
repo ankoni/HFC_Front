@@ -5,19 +5,29 @@ import {LoginComponent} from '../component/login/login.component';
 import {ContentComponent} from '../component/content/content.component';
 import {AppComponent} from '../app.component';
 import {MenuComponent} from '../component/content/menu/menu.component';
+import {FinanceTableComponent} from '../component/content/finance-table/finance-table.component';
+import {AuthGuard} from '../component/login/auth.guard';
 
 export const appRoutes: Routes = [
-  {
-    path: '',
-    component: AppComponent
-  },
   {
     path: 'login',
     component: LoginComponent
   },
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'main',
+  },
+  {
     path: 'main',
-    component: ContentComponent
+    component: ContentComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'finance',
+        component: FinanceTableComponent
+      }
+    ]
   }
 ];
 
