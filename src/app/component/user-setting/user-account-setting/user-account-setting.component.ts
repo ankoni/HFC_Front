@@ -12,7 +12,7 @@ export class UserAccountTableData {
   name: string;
   balance: number;
   update: string;
-  create: string;
+  create: Date;
   newRow?: boolean;
 }
 
@@ -35,7 +35,6 @@ export class UserAccountSettingComponent implements OnInit {
 
   userAccountTable: UserAccountTableData[] = [];
   displayedColumns: string[] = ['name', 'balance', 'update', 'create', 'delete'];
-  isChanged: boolean;
 
   ngOnInit() {
     this.accountService.getAccountsByUserId().subscribe((data: UserAccountTableData[]) => {
@@ -51,7 +50,7 @@ export class UserAccountSettingComponent implements OnInit {
       name: '',
       balance: null,
       update: '',
-      create: '',
+      create: new Date(),
       newRow: true
     });
     this.table.renderRows();
@@ -67,40 +66,46 @@ export class UserAccountSettingComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.userAccountTable.splice(this.userAccountTable.indexOf(element), 1);
-        this.table.renderRows();
-        if (!element.newRow) {
-          this.isChanged = true;
-        }
+       if (element.id) {
+         this.accountService.deleteUserAccount(element.id).subscribe(data => {
+           this.userAccountTable = data;
+         }, error => {
+           console.log(error);
+         });
+       } else {
+         this.userAccountTable.splice(this.userAccountTable.indexOf(element), 1);
+       }
+       this.table.renderRows();
       }
     });
   }
 
-  changeInputRow($event, element: any) {
-    switch ($event.target.name) {
-      case 'name':
-        element.name = $event.target.value;
-        break;
-      case 'balance':
-        element.balance = $event.target.value;
-        break;
-    }
-    if (element.newRow) {
-      this.isChanged = true;
-    }
+  editAccount(element: any) {
+    element.newRow = true;
   }
 
-  save() {
-    this.accountService.updateUsersAccounts(this.userId, this.userAccountTable).subscribe((data: UserAccountTableData[]) => {
-      this.snackBar.open('Данные успешно изменены', 'Счета', {
-        duration: 2000,
+  saveAccount(element: any) {
+    if (!element.id) {
+      this.accountService.createUserAccount(element).subscribe(data => {
+        this.userAccountTable = data;
+        this.table.renderRows();
+        this.snackBar.open('Счет успешно добавлен', 'Счета', {
+          duration: 2000,
+        });
+      }, error => {
+        console.log(error);
       });
-      this.userAccountTable = data;
-      this.isChanged = false;
-      this.table.renderRows();
-    }, error => {
-      console.log(error.message);
-    });
+    } else {
+      this.accountService.editUserAccount(element).subscribe(data => {
+        this.userAccountTable = data;
+        this.table.renderRows();
+        this.snackBar.open('Данные успешно изменены', 'Счета', {
+          duration: 2000,
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+    element.newRow = false;
   }
-
 }

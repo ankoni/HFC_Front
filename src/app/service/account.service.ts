@@ -16,7 +16,19 @@ export class AccountService {
     return this.http.get<UserAccountTableData[]>(`rest/account/user/`);
   }
 
-  updateUsersAccounts(id: string, data: UserAccountTableData[]): Observable<UserAccountTableData[]> {
-    return this.http.put<UserAccountTableData[]>(`rest/account/user/${id}/update`, data);
+  createUserAccount(data: UserAccountTableData): Observable<UserAccountTableData[]> {
+    return this.http.post<UserAccountTableData[]>('rest/account/user/create', data);
+  }
+
+  editUserAccount(data: UserAccountTableData): Observable<UserAccountTableData[]> {
+    return this.http.post<UserAccountTableData[]>('rest/account/user/edit', data);
+  }
+
+  deleteUserAccount(id: string): Observable<UserAccountTableData[]> {
+    return this.http.post<UserAccountTableData[]>(`rest/account/user/delete/${id}`, null);
+  }
+
+  getAccountById(id: string): Observable<UserAccountTableData> {
+    return this.http.get<UserAccountTableData>(`rest/account/${id}`);
   }
 }
