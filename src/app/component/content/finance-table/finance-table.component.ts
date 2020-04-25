@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {MatPaginator, MatSnackBar, MatTableDataSource} from '@angular/material';
 import {FinanceRecordService} from '../../../service/finance-record.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CategoryService} from '../../../service/category.service';
 import {AccountService} from '../../../service/account.service';
+import {UpdateBalanceService} from '../../../service/update-balance.service';
 
 export interface FinanceTableData {
   id: string;
@@ -53,7 +54,8 @@ export class FinanceTableComponent implements OnInit {
     private formBuilder: FormBuilder,
     private categoryService: CategoryService,
     private accountService: AccountService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private updateBalanceService: UpdateBalanceService
   ) { }
 
   ngOnInit() {
@@ -106,6 +108,7 @@ export class FinanceTableComponent implements OnInit {
         }, error => {
           console.log(error);
         });
+        this.updateBalanceService.updateBalance();
       }
     });
   }
@@ -134,6 +137,7 @@ export class FinanceTableComponent implements OnInit {
           this.dataSource.paginator = this.paginator;
           this.table.renderRows();
         });
+        this.updateBalanceService.updateBalance();
       }
     });
   }
@@ -160,6 +164,8 @@ export class FinanceTableComponent implements OnInit {
       }, error => {
         console.log(error);
       });
+
+      this.updateBalanceService.updateBalance();
     }
   }
 

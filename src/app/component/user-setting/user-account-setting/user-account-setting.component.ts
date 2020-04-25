@@ -19,7 +19,7 @@ export class UserAccountTableData {
 @Component({
   selector: 'app-user-account-setting',
   templateUrl: './user-account-setting.component.html',
-  styleUrls: ['./user-account-setting.component.scss']
+  styleUrls: ['./user-account-setting.component.scss', '../../../app.component.scss']
 })
 export class UserAccountSettingComponent implements OnInit {
 

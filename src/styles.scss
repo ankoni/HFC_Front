@@ -4,6 +4,7 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 @import '~@angular/material/theming';
 @import '~@covalent/core/theming/all-theme';
+@import "~bootstrap/dist/css/bootstrap.css";
 
 // Define a custom typography config that overrides the font-family
 // or any typography level.

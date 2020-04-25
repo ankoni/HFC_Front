@@ -1,6 +1,6 @@
 <div class="main-menu" layout="row" layout-align="end center">
-  <span class="mat-body">
-    Общий счет: {{account}}
+  <span class="mat-body" (click)="openDailyBalanceTableDialog()">
+    <b>Общий счет:</b> {{account ? account : 0}} <b>&#8381;</b>
   </span>
   <div class="main-menu-login pad-left-md" layout="row" layout-align="space-around center">
     <button mat-icon-button [matMenuTriggerFor]="menu">

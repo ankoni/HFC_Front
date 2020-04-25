@@ -46,6 +46,11 @@ import { UserCategorySettingComponent } from './component/user-setting/user-cate
 import { FinanceTableComponent } from './component/content/finance-table/finance-table.component';
 import {AuthGuard} from './component/login/auth.guard';
 import { CreateFinanceRecordDialogComponent } from './component/dialog/create-finance-record-dialog/create-finance-record-dialog.component';
+import { DailyBalanceTableComponent } from './component/dialog/daily-balance-table/daily-balance-table.component';
+import {TreetableModule} from 'ng-material-treetable';
+import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
+import {AccountService} from './service/account.service';
+
 export const DATE_FORMAT = {
   parse: {
     dateInput: 'LL',
@@ -69,7 +74,8 @@ export const DATE_FORMAT = {
     ConfirmDialogComponent,
     UserCategorySettingComponent,
     FinanceTableComponent,
-    CreateFinanceRecordDialogComponent
+    CreateFinanceRecordDialogComponent,
+    DailyBalanceTableComponent
   ],
     imports: [
         BrowserModule,
@@ -97,7 +103,10 @@ export const DATE_FORMAT = {
         MatSelectModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatCardModule
+        MatCardModule,
+        TreetableModule,
+        NgbPaginationModule,
+        NgbAlertModule
     ],
   providers: [
     Md5,
@@ -105,7 +114,8 @@ export const DATE_FORMAT = {
     {provide: LocationStrategy, useClass: HashLocationStrategy},
     AuthGuard,
     MatDatepickerModule,
-    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT}
+    {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
+    AccountService
   ],
   bootstrap: [AppComponent],
   entryComponents:
@@ -113,7 +123,8 @@ export const DATE_FORMAT = {
     RegistrationFormComponent,
     UserSettingComponent,
     ConfirmDialogComponent,
-    CreateFinanceRecordDialogComponent
+    CreateFinanceRecordDialogComponent,
+    DailyBalanceTableComponent
   ]
 })
 export class AppModule {

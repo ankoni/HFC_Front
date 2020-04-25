@@ -1,9 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 import {AuthService} from '../../../service/auth.service';
 import {MatDialog} from '@angular/material/dialog';
 import {UserSettingComponent} from '../../user-setting/user-setting.component';
+import {DailyBalanceTableComponent} from '../../dialog/daily-balance-table/daily-balance-table.component';
+import {AccountService} from '../../../service/account.service';
+import {UpdateBalanceService} from '../../../service/update-balance.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -13,16 +17,33 @@ import {UserSettingComponent} from '../../user-setting/user-setting.component';
 export class MenuComponent implements OnInit {
 
   @Input() login: string;
-  account = '00.00р';
+  account: number;
+  accountSub: Subscription;
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,
+    private accountService: AccountService,
     private router: Router,
-    public dialog: MatDialog
-  ) { }
+    public dialog: MatDialog,
+    private cd: ChangeDetectorRef,
+    private updateBalanceService: UpdateBalanceService
+  ) {
+    this.accountSub = updateBalanceService.totalBalance$.subscribe(
+      balance => {
+        this.account = balance;
+      });
+  }
 
   ngOnInit() {
+    this.getTotalBalance();
+  }
 
+  getTotalBalance() {
+    this.accountService.getUserTotalBalance().subscribe(total => {
+      this.account = total;
+    }, error => {
+      console.log(error);
+    });
   }
 
   logout() {
@@ -42,6 +63,13 @@ export class MenuComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+    });
+  }
+
+  openDailyBalanceTableDialog() {
+    const dialogRef = this.dialog.open(DailyBalanceTableComponent, {
+      height: '500px',
+      width: '600px'
     });
   }
 
