@@ -35,8 +35,8 @@ export class AccountService {
     return this.http.get<UserAccountTableData>(`rest/account/${id}`);
   }
 
-  getUserDailyBalance(): Observable<Map<Date, DailyBalanceRow[]>[]> {
-    return this.http.get<Map<Date, DailyBalanceRow[]>[]>('rest/account/user/dailyBalance');
+  getUserDailyBalance(): Observable<Map<Date, DailyBalanceRow[]>> {
+    return this.http.get<Map<Date, DailyBalanceRow[]>>('rest/account/user/dailyBalance');
   }
 
   getUserTotalBalance(): Observable<number> {

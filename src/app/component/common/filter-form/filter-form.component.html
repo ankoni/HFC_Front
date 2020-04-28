@@ -1,0 +1,81 @@
+<div ngbDropdown>
+  <button mat-icon-button>
+    <mat-icon matTooltip="Фильтр" ngbDropdownToggle id="filter-menu">
+      filter_list
+    </mat-icon>
+  </button>
+  <div ngbDropdownMenu aria-labelledby="filter-menu" #filterMenu>
+    <form [formGroup]="filterForm" class="pad-md pad-top-none" layout="column" layout-align="start stretch">
+      <div layout="row" layout-align="space-between center">
+        <h3 class="mat-dialog-title">Фильтр</h3>
+        <button mat-icon-button (click)="closeMenu()" matTooltip="Закрыть">
+          <mat-icon>
+            close
+          </mat-icon>
+        </button>
+      </div>
+      <mat-form-field>
+        <mat-label>Категория</mat-label>
+        <mat-select [formControl]="filterForm.get('category')">
+          <ng-container *ngFor="let category of categories">
+            <mat-option [value]="category">
+              {{category.name}}
+            </mat-option>
+            <mat-option *ngFor="let child of category.children" [value]="child">
+              {{child.name}}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+
+      <div layout="row" layout-align="center space-between">
+        <mat-form-field class="push-right-sm w-50">
+          <mat-label>Сумма (от)</mat-label>
+          <input matInput type="number"
+                 [max]="filterForm.get('amount').get('to').value"
+                 [formControl]="filterForm.get('amount').get('from')">
+          <span matSuffix><b>&#8381;</b></span>
+        </mat-form-field>
+        <mat-form-field class="w-50">
+          <mat-label>Сумма (до)</mat-label>
+          <input matInput type="number"
+                 [min]="filterForm.get('amount').get('from').value"
+                 [formControl]="filterForm.get('amount').get('to')">
+          <span matSuffix><b>&#8381;</b></span>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Счет</mat-label>
+        <mat-select [formControl]="filterForm.get('account')">
+          <mat-option *ngFor="let account of accounts" [value]="account">
+            {{account.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div layout="row" layout-align="center space-between">
+        <mat-form-field class="push-right-sm w-50">
+          <mat-label>Дата (от)</mat-label>
+          <input matInput [matDatepicker]="dateFrom" [max]="filterForm.get('recordDate').get('to').value" [formControl]="filterForm.get('recordDate').get('from')">
+          <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #dateFrom></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="w-50">
+          <mat-label>Дата (до)</mat-label>
+          <input matInput [matDatepicker]="dateTo" [min]="filterForm.get('recordDate').get('from').value" [formControl]="filterForm.get('recordDate').get('to')">
+          <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+          <mat-datepicker #dateTo></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div layout="row" layout-align="end center">
+        <button mat-button (click)="resetFilter()" [disabled]="filterForm.pristine">
+          Сбросить
+        </button>
+        <button mat-button class="mat-primary" (click)="filter()" [disabled]="filterForm.pristine || filterForm.invalid">
+          Применить
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

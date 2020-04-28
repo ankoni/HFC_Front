@@ -22,5 +22,13 @@ export class UpdateBalanceService {
     }, 5000);
 
   }
+
+  getTotalBalance(rows: any[]): number {
+    let total = 0;
+    rows.forEach(it => {
+      total += it.balance;
+    });
+    return total;
+  }
 }
 

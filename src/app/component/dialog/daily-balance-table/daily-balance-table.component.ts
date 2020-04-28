@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AccountService} from '../../../service/account.service';
+import {MatPaginator} from '@angular/material';
 
 export class DailyBalanceRow {
   name: string;
@@ -17,8 +18,9 @@ export interface DailyBalanceTotal {
   styleUrls: ['./daily-balance-table.component.scss', '../../../app.component.scss']
 })
 export class DailyBalanceTableComponent implements OnInit {
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   dailyBalanceDataTable: any[];
-  displayedColumns: string[] = ['rows', 'total', 'date'];
+  tableData: any[];
   constructor(
     private accountService: AccountService
   ) {
@@ -36,7 +38,15 @@ export class DailyBalanceTableComponent implements OnInit {
             total: this.getTotalBalance(value)
           });
         }
-        console.log(this.dailyBalanceDataTable);
+
+        this.paginator.length = this.dailyBalanceDataTable.length;
+        let from = this.paginator.pageIndex * this.paginator.pageSize;
+        this.tableData = this.dailyBalanceDataTable.slice(from, from + this.paginator.pageSize);
+        this.paginator.page.subscribe(page => {
+          from = page.pageIndex * page.pageSize;
+          console.log(page);
+          this.tableData = this.dailyBalanceDataTable.slice(from, from + page.pageSize);
+        });
       }
     }, error => {
       console.log(error);

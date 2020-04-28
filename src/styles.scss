@@ -40,8 +40,14 @@ Main styles
 .width-full {
   width: 100%;
 }
+.w-50 {
+  width: 50%;
+}
 .height-full {
   height: 100%;
+  .mat-tab-body-wrapper {
+    height: 100%;
+  }
 }
 
 .background-white {

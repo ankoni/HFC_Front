@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateFinanceRecord, FinanceTableData} from '../component/content/finance-table/finance-table.component';
+import {FilterData} from '../component/common/filter-form/filter-form.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,12 @@ export class FinanceRecordService {
     private http: HttpClient
   ) { }
 
-  getAllFinanceUserRecords(): Observable<FinanceTableData[]> {
-    return this.http.get<FinanceTableData[]>('rest/finance/record/user');
+  getAllFinanceUserRecords(filter: FilterData[]): Observable<FinanceTableData[]> {
+    return this.http.post<FinanceTableData[]>('rest/finance/record/user', filter);
+  }
+
+  getUserFinanceRecordById(recordId: string): Observable<FinanceTableData> {
+    return this.http.get<FinanceTableData>(`rest/finance/record/${recordId}/user`);
   }
 
   createUserFinanceRecord(data: CreateFinanceRecord): Observable<FinanceTableData[]> {
