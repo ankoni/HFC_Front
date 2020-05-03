@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  CanActivateChild,
   CanLoad,
   Route,
-  UrlSegment,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
   Router,
-  NavigationExtras,
-  CanActivate, CanActivateChild
+  RouterStateSnapshot,
+  UrlSegment,
+  UrlTree
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 import {AuthService} from '../../service/auth.service';
+import {Permission} from '../../model/permission.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +37,17 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const url: string = state.url;
     if (this.checkLogin(url)) {
-      if (url !== '/main') {
+      if (url !== '/main' && url !== '/admin') {
         this.router.navigate([url]);
+      }
+      if (url === '/admin') {
+        this.authService.checkPermission(Permission.AdminPanel).subscribe(allow => {
+          if (allow) {
+            this.router.navigate([url]);
+          } else {
+            this.router.navigate(['/main']);
+          }
+        });
       }
 
       return true;

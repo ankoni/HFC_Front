@@ -1,14 +1,15 @@
-import {Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSnackBar, MatTableDataSource} from '@angular/material';
 import {FinanceRecordService} from '../../../service/finance-record.service';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateFinanceRecordDialogComponent} from '../../dialog/create-finance-record-dialog/create-finance-record-dialog.component';
 import {IdNameObj} from '../../common/id-name-obj';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {CategoryService} from '../../../service/category.service';
 import {AccountService} from '../../../service/account.service';
 import {UpdateBalanceService} from '../../../service/update-balance.service';
-import {FilterData} from '../../common/filter-form/filter-form.component';
+import {FieldType} from '../../../model/field-type.enum';
+import {TableDataComponent} from '../../common/table-data/table-data.component';
 
 export interface FinanceTableData {
   id: string;
@@ -33,17 +34,11 @@ export class CreateFinanceRecord {
   templateUrl: './finance-table.component.html',
   styleUrls: ['./finance-table.component.scss']
 })
-export class FinanceTableComponent implements OnInit {
+export class FinanceTableComponent extends TableDataComponent implements OnInit {
 
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild('matFinanceTable', {static: false}) table;
-  @ViewChild('recordDrawer', {static: true}) financeDataDrawer;
+  tableTitle = 'Таблица финансов';
 
-  filter: FilterData[] = [];
-  openRow: FinanceTableData;
   columnsToDisplay = ['category', 'amount', 'account', 'date'];
-  recordData: FinanceTableData[] = [];
-  dataSource: MatTableDataSource<FinanceTableData>;
 
   categories: IdNameObj[] = [];
   accounts: IdNameObj[] = [];
@@ -56,27 +51,40 @@ export class FinanceTableComponent implements OnInit {
     private accountService: AccountService,
     private snackBar: MatSnackBar,
     private updateBalanceService: UpdateBalanceService
-  ) { }
+  ) {
+    super(dialog);
+  }
+
+  actionMenuList = [
+    {name: 'Добавить', action: () => this.addRecord() }
+  ];
 
   ngOnInit() {
-    this.getDataTable();
-
-    this.categoryService.getUserCategory().subscribe(data => {
-      data.forEach(category => {
-        this.categories.push({id: category.id, name: category.name});
-        if (category.children) {
-          category.children.forEach(child => {
-            this.categories.push({id: child.id, name: child.name + ' (' + category.name + ')'});
-          });
-        }
-      });
-    }, error => {
-      console.log(error);
-    });
-
-    this.accountService.getAccountsByUserId().subscribe(data => {
-      data.forEach(account => {
+    super.ngOnInit();
+    this.accountService.getAccountsByUserId().subscribe(accounts => {
+      accounts.forEach(account => {
         this.accounts.push({id: account.id, name: account.name});
+      });
+
+      this.categoryService.getUserCategory().subscribe(categories => {
+        categories.forEach(category => {
+          this.categories.push({id: category.id, name: category.name});
+          if (category.children) {
+            category.children.forEach(child => {
+              this.categories.push({id: child.id, name: child.name + ' (' + category.name + ')'});
+            });
+          }
+        });
+
+        this.formFields = [
+          {name: 'amount', label: 'Сумма', type: FieldType.BalanceInput},
+          {name: 'account', label: 'Счет', type: FieldType.Select, dataForSelect: this.accounts},
+          {name: 'category', label: 'Категория', type: FieldType.Select, dataForSelect: this.categories},
+          {name: 'description', label: 'Примечание', type: FieldType.Textarea}
+        ];
+
+      }, error => {
+        console.log(error);
       });
     }, error => {
       console.log(error);
@@ -89,11 +97,6 @@ export class FinanceTableComponent implements OnInit {
       this.dataSource = new MatTableDataSource<FinanceTableData>(this.recordData);
       this.dataSource.paginator = this.paginator;
     });
-  }
-
-  filterTable(filters: FilterData[]): void {
-    this.filter = filters;
-    this.getDataTable();
   }
 
   addRecord() {
@@ -115,9 +118,11 @@ export class FinanceTableComponent implements OnInit {
           changeAccountBalance: record.changeAccountBalance
         };
         this.financeRecordService.createUserFinanceRecord(newRecord).subscribe(data => {
-          this.recordData = data;
-          this.dataSource = new MatTableDataSource<FinanceTableData>(this.recordData);
+          this.getDataTable();
           this.table.renderRows();
+          this.snackBar.open('Запись добавлена', 'Записи', {
+            duration: 2000
+          });
         }, error => {
           console.log(error);
         });
@@ -128,10 +133,11 @@ export class FinanceTableComponent implements OnInit {
 
   deleteRecord(element: FinanceTableData) {
     this.financeRecordService.deleteUserFinanceRecord(element.id).subscribe(data => {
-      this.recordData = data;
-      this.dataSource = new MatTableDataSource<FinanceTableData>(this.recordData);
-      this.dataSource.paginator = this.paginator;
-      this.financeDataDrawer.close();
+      this.getDataTable();
+      this.editRecordDataDrawer.close();
+      this.snackBar.open('Запись удалена', 'Записи', {
+        duration: 2000
+      });
       this.table.renderRows();
     });
     this.updateBalanceService.updateBalance();
@@ -154,14 +160,5 @@ export class FinanceTableComponent implements OnInit {
 
   hideActionColumn() {
     this.columnsToDisplay.splice(-1, 1);
-  }
-
-  openDrawer(row: any) {
-    if (this.openRow === row && this.financeDataDrawer.opened) {
-      this.financeDataDrawer.close();
-    } else {
-      this.openRow = row;
-      this.financeDataDrawer.open();
-    }
   }
 }

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {LoginComponent, AuthData} from '../component/login/login.component';
+import {Permission} from '../model/permission.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,10 @@ export class AuthService {
 
   logout(): Observable<any> {
     return this.http.post('rest/auth/logout', null);
+  }
+
+  checkPermission(permission: Permission): Observable<boolean> {
+    return this.http.post<boolean>('rest/auth/checkPermission', permission);
   }
 
 }

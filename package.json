@@ -25,6 +25,7 @@
     "@covalent/core": "^2.1.1",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@ng-bootstrap/ng-bootstrap": "^4.2.1",
+    "@ngx-translate/core": "^12.1.2",
     "angular-bootstrap-md": "^8.10.1",
     "animate.css": "^3.7.2",
     "bootstrap": "^3.4.1",

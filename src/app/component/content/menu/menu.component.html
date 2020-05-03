@@ -13,7 +13,7 @@
       <button mat-menu-item (click)="openUserSetting()">
         Личный кабинет
       </button>
-      <button mat-menu-item>Админ панель</button>
+      <button mat-menu-item *appPermission="Permission.AdminPanel" [routerLink]="['/admin']">Админ панель</button>
     </mat-menu>
 
     <div class="pad-left-md pad-right-sm">

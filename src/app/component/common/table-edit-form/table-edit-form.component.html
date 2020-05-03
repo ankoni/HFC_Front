@@ -1,0 +1,52 @@
+<div *ngIf="openRow" class="height-full" layout="column">
+  <div layout="row" layout-align="space-between center">
+    <h3 class="pad-left-sm" [innerHTML]="formTitle">
+    </h3>
+    <div>
+      <button mat-icon-button *ngIf="editForm.dirty" (click)="resetForm()">
+        <mat-icon matTooltip="Отменить изменения">
+          undo
+        </mat-icon>
+      </button>
+      <button mat-icon-button *ngIf="!readonly"
+              (click)="deleteFinanceRecord(openRow)" class="pad-right-md">
+        <mat-icon>
+          delete
+        </mat-icon>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div flex-grow layout-align="space-between start" class="finance-record-data-form">
+    <form [formGroup]="editForm" layout="column" layout-align="center stretch" class="pad-md">
+      <ng-container *ngFor="let field of formFields">
+        <mat-form-field *ngIf="field.type === FieldType.SimpleInput">
+          <mat-label>{{field.label}}</mat-label>
+          <input matInput [formControl]="editForm.get(field.name)" [readonly]="field.readonly || readonly">
+        </mat-form-field>
+        <mat-form-field *ngIf="field.type === FieldType.BalanceInput">
+          <mat-label>{{field.label}}</mat-label>
+          <input matInput type="number" [formControl]="editForm.get(field.name)" [readonly]="field.readonly || readonly">
+          <span matSuffix><b>&#8381;</b></span>
+        </mat-form-field>
+        <mat-form-field *ngIf="field.type === FieldType.Select">
+          <mat-label>{{field.label}}</mat-label>
+          <mat-select [formControl]="editForm.get(field.name)">
+            <mat-option *ngFor="let data of field.dataForSelect" [value]="data.id">
+              {{data.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="field.type === FieldType.Textarea">
+          <mat-label>{{field.label}}</mat-label>
+          <textarea matInput [formControl]="editForm.get(field.name)" [readonly]="field.readonly || readonly"></textarea>
+        </mat-form-field>
+      </ng-container>
+    </form>
+    <div class="bottom-button pad-right-sm" layout="row" layout-align="end center">
+      <button mat-fab (click)="edit(editForm, openRow)" [disabled]="editForm.invalid || editForm.pristine || readonly">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

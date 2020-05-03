@@ -8,6 +8,7 @@ import {DailyBalanceTableComponent} from '../../dialog/daily-balance-table/daily
 import {AccountService} from '../../../service/account.service';
 import {UpdateBalanceService} from '../../../service/update-balance.service';
 import {Subscription} from 'rxjs';
+import {Permission} from '../../../model/permission.enum';
 
 @Component({
   selector: 'app-menu',
@@ -19,6 +20,7 @@ export class MenuComponent implements OnInit {
   @Input() login: string;
   account: number;
   accountSub: Subscription;
+  Permission = Permission;
   constructor(
     private route: ActivatedRoute,
     private authService: AuthService,

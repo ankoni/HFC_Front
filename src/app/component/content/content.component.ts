@@ -10,9 +10,7 @@ import {Router} from '@angular/router';
 export class ContentComponent implements OnInit {
 
   userName: string;
-  menu = [
-    {name: 'Таблица финансов'}
-  ];
+
 
   constructor(
     private authService: AuthService,

@@ -7,6 +7,9 @@ import {AppComponent} from '../app.component';
 import {MenuComponent} from '../component/content/menu/menu.component';
 import {FinanceTableComponent} from '../component/content/finance-table/finance-table.component';
 import {AuthGuard} from '../component/login/auth.guard';
+import {AdminComponent} from '../component/admin/admin.component';
+import {MainPageComponent} from '../component/main-page/main-page.component';
+import {UserListComponent} from '../component/admin/user-list/user-list.component';
 
 export const appRoutes: Routes = [
   {
@@ -15,8 +18,8 @@ export const appRoutes: Routes = [
   },
   {
     path: '',
-    pathMatch: 'full',
     redirectTo: 'main',
+    pathMatch: 'full'
   },
   {
     path: 'main',
@@ -24,8 +27,31 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'finance',
-        component: FinanceTableComponent
+        path: '',
+        component: MainPageComponent,
+        children: [
+          {
+            path: 'finance',
+            component: FinanceTableComponent
+          }
+        ]
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    component: ContentComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        component: AdminComponent,
+        children: [
+          {
+            path: 'users',
+            component: UserListComponent
+          }
+        ]
       }
     ]
   }

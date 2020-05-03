@@ -1,42 +1,27 @@
-import {Component, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
 import {FinanceTableData} from '../finance-table/finance-table.component';
-import {ConfirmDialogComponent} from '../../dialog/confirm-dialog/confirm-dialog.component';
-import {MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FinanceRecordService} from '../../../service/finance-record.service';
 import {MatDialog} from '@angular/material/dialog';
-import {IdNameObj} from '../../common/id-name-obj';
+import {TableEditFormComponent} from '../../common/table-edit-form/table-edit-form.component';
 
 @Component({
   selector: 'app-finance-record-edit',
-  templateUrl: './finance-record-edit.component.html',
-  styleUrls: ['./finance-record-edit.component.scss']
+  templateUrl: '../../common/table-edit-form/table-edit-form.component.html'
 })
-export class FinanceRecordEditComponent implements OnInit, OnChanges {
-
-  @Input() openRow: FinanceTableData;
-  @Input() categories: IdNameObj[] = [];
-  @Input() accounts: IdNameObj[] = [];
-  @Input() deleteRecord: (element: any) => void;
-  @Input() editRecord: (editData: FinanceTableData, row: FinanceTableData) => void;
+export class FinanceRecordEditComponent extends TableEditFormComponent implements OnInit, OnChanges {
 
   editForm: FormGroup;
-  data: FinanceTableData;
   constructor(
     public dialog: MatDialog,
     private formBuilder: FormBuilder
   ) {
+    super(dialog);
   }
 
   ngOnInit() {
-    this.data = this.openRow;
-    this.initForm();
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('openRow')) {
-      this.data = this.openRow;
-      this.initForm();
-    }
+    super.ngOnInit();
+    this.formTitle = `Запись от ${this.transform(this.openRow.date, 'dd.MM.yyyy')}
+      <div class="mat-small">Дата создания: ${this.transform(this.openRow.loadDate, 'dd.MM.yyyy')}</div>`;
   }
 
   initForm() {
@@ -46,6 +31,8 @@ export class FinanceRecordEditComponent implements OnInit, OnChanges {
       account: new FormControl(this.openRow.account.id, Validators.required),
       description: new FormControl(this.openRow.description, null)
     });
+
+    this.readonly = !this.canEdit(this.openRow);
   }
 
   canEdit(row: FinanceTableData) {
@@ -53,40 +40,5 @@ export class FinanceRecordEditComponent implements OnInit, OnChanges {
     weekAgoDate.setDate(weekAgoDate.getDate() - 7);
     const openRowDate = new Date(row.date);
     return openRowDate.getTime() > weekAgoDate.getTime();
-  }
-
-  deleteFinanceRecord(element: any) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '300px',
-      height: '200px',
-      data: {
-        message: 'Вы уверены?'
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.deleteRecord(element);
-      }
-    });
-  }
-
-  edit(editForm: FormGroup, row: FinanceTableData) {
-    if (editForm.valid) {
-      const editData: FinanceTableData = {
-        id: row.id,
-        account: this.accounts.filter(it => it.id === editForm.get('account').value)[0],
-        amount: editForm.get('amount').value,
-        category: this.categories.filter(it => it.id === editForm.get('category').value)[0],
-        description: editForm.get('description').value,
-        date: row.date,
-        loadDate: row.loadDate
-      };
-      this.editRecord(editData, row);
-    }
-  }
-
-  resetForm() {
-    this.openRow = this.data;
-    this.initForm();
   }
 }

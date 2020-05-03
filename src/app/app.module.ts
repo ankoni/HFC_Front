@@ -54,6 +54,12 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ChartsModule } from 'angular-bootstrap-md';
 import { FinanceRecordEditComponent } from './component/content/finance-record-edit/finance-record-edit.component';
 import { FilterFormComponent } from './component/common/filter-form/filter-form.component';
+import { PermissionDirective } from './directive/permission.directive';
+import { AdminComponent } from './component/admin/admin.component';
+import { MainPageComponent } from './component/main-page/main-page.component';
+import { UserListComponent } from './component/admin/user-list/user-list.component';
+import { TableDataComponent } from './component/common/table-data/table-data.component';
+import { TableEditFormComponent } from './component/common/table-edit-form/table-edit-form.component';
 
 export const DATE_FORMAT = {
   parse: {
@@ -82,7 +88,13 @@ export const DATE_FORMAT = {
     DailyBalanceTableComponent,
     ChartComponent,
     FinanceRecordEditComponent,
-    FilterFormComponent
+    FilterFormComponent,
+    PermissionDirective,
+    AdminComponent,
+    MainPageComponent,
+    UserListComponent,
+    TableDataComponent,
+    TableEditFormComponent
   ],
   imports: [
     BrowserModule,

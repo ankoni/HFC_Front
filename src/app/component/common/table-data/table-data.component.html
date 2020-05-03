@@ -4,8 +4,6 @@
       <span class="pad-left-sm">{{tableTitle}}</span>
       <div layout="row" layout-align="end center">
         <app-filter-form
-          [accounts]="accounts"
-          [categories]="categories"
           (changeFilter)="filterTable($event)"
         ></app-filter-form>
         <button mat-icon-button>
@@ -22,34 +20,9 @@
     </div>
     <div flex="grow" class="background-white">
       <table mat-table #matFinanceTable [dataSource]="dataSource" class="width-full" *ngIf="recordData.length > 0">
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>Категория</th>
-          <td mat-cell *matCellDef="let element"> {{element.category.name}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef>Сумма</th>
-          <td mat-cell *matCellDef="let element"> {{element.amount}} &#8381;</td>
-        </ng-container>
-
-        <ng-container matColumnDef="account">
-          <th mat-header-cell *matHeaderCellDef>Счет</th>
-          <td mat-cell *matCellDef="let element"> {{element.account.name}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef>Дата</th>
-          <td mat-cell *matCellDef="let element"> {{element.loadDate | date: 'dd.MM.yyyy'}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>
-            <button mat-icon-button (click)="hideActionColumn()">
-              <mat-icon>
-                remove
-              </mat-icon>
-            </button>
-          </th>
+        <ng-container *ngFor="let column of columnsData" [matColumnDef]="column.columnDefinition">
+          <th mat-header-cell *matHeaderCellDef>{{column.columnName}}</th>
+          <td mat-cell *matCellDef="let element"> {{element.get(column.elementData)}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
@@ -64,12 +37,9 @@
   </div>
 
   <mat-drawer #recordDrawer mode="side" position="end" class="finance-record-data">
-    <app-finance-record-edit *ngIf="openRow"
-                             [formFields]="formFields"
-                             [openRow]="openRow"
-                             [deleteRecord]="deleteRecord"
-                             [editRecord]="editRecord"
-    ></app-finance-record-edit>
+    <app-table-edit-form
+      *ngIf="openRow"
+      [openRow]="openRow"></app-table-edit-form>
   </mat-drawer>
 
 </mat-drawer-container>
